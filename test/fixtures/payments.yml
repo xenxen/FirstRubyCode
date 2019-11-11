@@ -1,0 +1,33 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  external_id: 1
+  external_order_id: 1
+  payer_id: 1
+  installments: 1
+  payment_type: MyString
+  status: MyString
+  transaction_amount: 1.5
+  taxes_amount: 1.5
+  shipping_cost: 1.5
+  total_paid_amount: 1.5
+  installment_amount: 1.5
+  date_approved: 2019-11-10 23:12:44
+  date_created: 2019-11-10 23:12:44
+  order: one
+
+two:
+  external_id: 1
+  external_order_id: 1
+  payer_id: 1
+  installments: 1
+  payment_type: MyString
+  status: MyString
+  transaction_amount: 1.5
+  taxes_amount: 1.5
+  shipping_cost: 1.5
+  total_paid_amount: 1.5
+  installment_amount: 1.5
+  date_approved: 2019-11-10 23:12:44
+  date_created: 2019-11-10 23:12:44
+  order: two
