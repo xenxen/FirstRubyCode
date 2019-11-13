@@ -2,16 +2,18 @@
 class Api::SyncController < Api::BaseController
     def index
         #o = fakeobj
-        o = fakeobj2
+        #o = fakeobj2
         #render json: o
-        render json: o
-        #render json: { message: 'Hello World!' }, status: :ok
+        #render :json => o, :include => :posts 
+
+        render json: { message: 'Hello World!' }, status: :ok
+
     end
 
     def fakeobj2
-        o = Loja.create(nome: 'loja')
-        o.produto = Produto.create(nome: 'Produto')
-        return o
+        user  = User.create({name: 'Gleidson'})
+        user.posts.create({title: 'titulo', body: 'teste'})
+        return user 
     end
 
     def fakeobj
