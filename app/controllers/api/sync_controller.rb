@@ -2,18 +2,74 @@
 class Api::SyncController < Api::BaseController
     def index
         #o = fakeobj
-        #o = fakeobj2
+        o = fakeobj2
         #render json: o
         #render :json => o, :include => :posts 
 
-        render json: { message: 'Hello World!' }, status: :ok
+        render :json => o, :include => [:order_items => { :include => :item}]
+
 
     end
 
     def fakeobj2
-        user  = User.create({name: 'Gleidson'})
-        user.posts.create({title: 'titulo', body: 'teste'})
-        return user 
+
+        params = {
+            external_id: 9987071,
+            store_id: 282,
+            date_created: "2019-06-24T16:45:32.000-04:00",
+            date_closed: "2019-06-24T16:45:35.000-04:00",
+            last_updated: "2019-06-25T13:26:49.000-04:00",
+            total_amount: 49.9,
+            total_shipping: 5.14,
+            total_amount_with_shipping: 55.04,
+            paid_amount: 55.04,
+            expiration_date: "2019-07-22T16:45:35.000-04:00",
+            total_shipping: 5.14,    
+            status: "paid", 
+            order_items: [
+                {
+                    item: {
+                        id: "IT4801901403",
+                        title: "Produto de Testes"
+                    },
+                    quantity: 1,
+                    unit_price: 49.9,
+                    full_unit_price: 49.9
+                }
+            ]
+          }
+
+        #o  = Order.create(params)
+        o  = Order.create({
+            external_id: 9987071,
+            store_id: 282,
+            date_created: "2019-06-24T16:45:32.000-04:00",
+            date_closed: "2019-06-24T16:45:35.000-04:00",
+            last_updated: "2019-06-25T13:26:49.000-04:00",
+            total_amount: 49.9,
+            total_shipping: 5.14,
+            total_amount_with_shipping: 55.04,
+            paid_amount: 55.04,
+            expiration_date: "2019-07-22T16:45:35.000-04:00",
+            total_shipping: 5.14,    
+            status: "paid"
+          })
+        i = Item.create({
+            external_id: 'IT4801901403',
+            title: 'Produto de Testes'})
+
+        o.order_items.build({
+            quantity: 1,
+            unit_price: 49.9,
+            full_unit_price: 49.9,
+            item: i
+        })
+        
+        
+
+            
+        
+        return o 
     end
 
     def fakeobj
