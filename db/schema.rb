@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_13_031848) do
+ActiveRecord::Schema.define(version: 2019_11_13_235400) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -160,6 +160,20 @@ ActiveRecord::Schema.define(version: 2019_11_13_031848) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "syncs", force: :cascade do |t|
+    t.datetime "date_created"
+    t.datetime "date_processed"
+    t.string "sender_ip"
+    t.text "payload"
+    t.string "status"
+    t.string "storeId"
+    t.string "externalCode"
+    t.bigint "order_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["order_id"], name: "index_syncs_on_order_id"
+  end
+
   add_foreign_key "billing_infos", "buyers"
   add_foreign_key "buyers", "orders"
   add_foreign_key "items", "order_items"
@@ -172,4 +186,5 @@ ActiveRecord::Schema.define(version: 2019_11_13_031848) do
   add_foreign_key "receiver_addresses", "shippings"
   add_foreign_key "receiver_addresses", "states"
   add_foreign_key "shippings", "orders"
+  add_foreign_key "syncs", "orders"
 end

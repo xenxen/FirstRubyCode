@@ -4,4 +4,5 @@ class Order < ApplicationRecord
     has_one :shipping
     has_one :buyer
     accepts_nested_attributes_for :order_items, :payments, :shipping, :buyer
+
 end
