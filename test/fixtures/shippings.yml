@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  external_id: 1
+  shipment_type: MyString
+  date_created: 2019-11-12 23:31:38
+  order: one
+
+two:
+  external_id: 1
+  shipment_type: MyString
+  date_created: 2019-11-12 23:31:38
+  order: two
