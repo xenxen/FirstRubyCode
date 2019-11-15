@@ -1,32 +1,45 @@
 # app/controllers/api/sync_controller/sync_process.rb
 
+#Classe destinada a agrupar as regras de negócio e apoiar o controller Sync fazendo o processamento da transação
+
 class Api::SyncController
     class Process
 
-        attr_reader :payload, :sender_ip, :parsed_json
+        attr_reader :payload, :sender_ip, :parsed_json, :sync
         
         def initialize
           
         end
         
-        def integrate(payload, sender_ip)
+        def create_sync(payload, sender_ip)
+            #método para acriação e injeção de propriedades do objeto Sync
             @payload = payload
             @sender_ip = sender_ip
             @parsed_json = parse_imput @payload
 
-            sync = Sync.new()
-            sync.date_created = Time.now.utc
-            sync.date_processed = nil
-            sync.sender_ip = @sender_ip
-            sync.payload = @payload
-            sync.status = 'Processing'
-            sync.storeId = @parsed_json['store_id']
-            sync.externalCode = @parsed_json['id']
+            @sync = Sync.new()
+            @sync.date_created = Time.now.utc
+            @sync.date_processed = nil
+            @sync.sender_ip = @sender_ip
+            @sync.payload = @payload
+            @sync.status = 'Processing'
+            @sync.storeId = @parsed_json['store_id']
+            @sync.externalCode = @parsed_json['id']
             
-            sync.order = create_order(@parsed_json)
+            @sync.order = create_order(@parsed_json)
 
-            return sync
+            #return @sync
         end    
+
+        def complete_sync(status)
+            if @sync.status == 'Processing' && status == 'SUCCESS'
+                @sync.status = 'Complete'
+                @sync.date_processed = Time.now.utc
+            else
+                @sync.status = 'Error'
+                @sync.date_processed = Time.now.utc
+            end
+        end
 
         def parse_imput(payload = nil)
             
@@ -40,62 +53,9 @@ class Api::SyncController
             return parsed
         end    
 
-        def prepare_to_send(order)
-
-            obj_customer = DC::Customer.new( 
-                order.buyer.external_id, 
-                "#{order.buyer.first_name} #{order.buyer.last_name}",
-                order.buyer.email, 
-                "#{order.buyer.phone.area_code}#{order.buyer.phone.number}", 
-            )
-
-            obj_items = []
-            order.order_items.each do |oi|
-                obj_items.push(DC::Item.new(oi.item.external_id, 
-                    oi.item.title, 
-                    oi.unit_price, 
-                    oi.quantity, 
-                    oi.full_unit_price, 
-                    nil))
-                
-            end
-
-            obj_payments = []
-            order.payments.each do |pay|
-                obj_payments.push(DC::Payment.new(pay.payment_type, 
-                    pay.total_paid_amount, 
-                    ))
-                
-            end
-
-            obj_to_send = DC::Process.new(
-                order.external_id, 
-                order.store_id, 
-                order.total_amount, 
-                order.total_shipping, 
-                order.total_amount_with_shipping, 
-                order.shipping.receiver_address.country.external_id, 
-                order.shipping.receiver_address.state.name,
-                order.shipping.receiver_address.city.name,
-                order.shipping.receiver_address.neighborhood.name,
-                order.shipping.receiver_address.street_name,
-                order.shipping.receiver_address.comment,
-                order.shipping.receiver_address.latitude,
-                order.shipping.receiver_address.longitude,
-                order.date_created,
-                order.shipping.receiver_address.zip_code,
-                order.shipping.receiver_address.street_number,
-                order.total_shipping,
-                obj_customer,
-                obj_items,
-                obj_payments
-            )
-
-            return obj_to_send
-
-        end
-
         def create_order(json)
+            # Método para a criação do objeto atravez do Json encaminhado 
+            # Este processo foi feito de forma manual mas poderia ser realizado com ajuda de um "Auto Mapper' ou um Parser"
 
             object = @parsed_json
             order = Order.new()
