@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  date_created: 2019-11-13 20:54:00
+  date_processed: 2019-11-13 20:54:00
+  sender_ip: MyString
+  payload: MyText
+  status: MyString
+  storeId: MyString
+  externalCode: MyString
+  order: one
+
+two:
+  date_created: 2019-11-13 20:54:00
+  date_processed: 2019-11-13 20:54:00
+  sender_ip: MyString
+  payload: MyText
+  status: MyString
+  storeId: MyString
+  externalCode: MyString
+  order: two
